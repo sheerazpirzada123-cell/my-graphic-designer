@@ -1,0 +1,32 @@
+{
+  "title": "A4 flyer - Summer Festival",
+  "size": "A4",
+  "bleed": {"value": 3, "unit": "mm"},
+  "crop_marks": true,
+  "background": {"c": 5, "m": 0, "y": 20, "k": 0},
+  "elements": [
+    {"type": "ellipse", "cx": 210, "cy": 0, "r": 120,
+     "fill": {"type": "radial", "cx": 210, "cy": 0, "r": 120, "stops": [
+       {"offset": 0, "color": {"c": 0, "m": 70, "y": 100, "k": 0}},
+       {"offset": 1, "color": {"c": 0, "m": 30, "y": 100, "k": 0}}]}},
+    {"type": "polygon", "points": [[-3, 215], [213, 175], [213, 300], [-3, 300]],
+     "fill": {"c": 100, "m": 80, "y": 0, "k": 20}},
+    {"type": "text", "text": "SUMMER\nFESTIVAL", "x": 15, "y": 75, "size": 62, "font": "Poppins", "bold": true,
+     "line_height": 0.95, "fill": {"c": 0, "m": 0, "y": 0, "k": 100}},
+    {"type": "text", "text": "Music  -  Food  -  Fun for the whole family. Join us for three days of live performances and street food.",
+     "x": 15, "y": 125, "size": 15, "font": "Poppins", "max_width": 110, "line_height": 1.4,
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 85}},
+    {"type": "rect", "x": 15, "y": 150, "width": 70, "height": 16, "radius": 8,
+     "fill": {"c": 0, "m": 100, "y": 90, "k": 0}},
+    {"type": "text", "text": "FREE ENTRY", "x": 50, "y": 160.5, "size": 14, "font": "Poppins", "bold": true,
+     "align": "center", "fill": {"c": 0, "m": 0, "y": 0, "k": 0}},
+    {"type": "line", "x1": 15, "y1": 190, "x2": 195, "y2": 190, "stroke": {"c": 0, "m": 0, "y": 0, "k": 0},
+     "stroke_width": 1.5, "dash": [6, 4]},
+    {"type": "text", "text": "14-16 AUGUST  |  CENTRAL PARK", "x": 15, "y": 230, "size": 22, "font": "Poppins", "bold": true,
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 0}},
+    {"type": "text", "text": "www.summerfest.example", "x": 195, "y": 285, "size": 12, "font": "Poppins", "align": "right",
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 0}},
+    {"type": "text", "text": "NEW", "x": 175, "y": 60, "size": 20, "font": "Poppins", "bold": true, "rotate": 18,
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 0}}
+  ]
+}

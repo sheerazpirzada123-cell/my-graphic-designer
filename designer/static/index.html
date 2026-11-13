@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Designer AI</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#14181f; --mute:#5b6572; --brand:#1f4fd8; --line:#dfe3e8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0f1217; --card:#171b22; --ink:#eef1f5; --mute:#9aa5b4; --brand:#6d94ff; --line:#2a313c; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 system-ui, sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
+  h1 { font-size: 22px; margin: 8px 0 0; }
+  .card { background: var(--card); border:1px solid var(--line); border-radius: 12px; padding: 14px; display:grid; gap:10px; }
+  label { font-size: 13px; color: var(--mute); display:grid; gap:4px; }
+  textarea, input[type=text], input[type=password] { width:100%; padding:10px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--ink); font:inherit; }
+  textarea { min-height: 110px; resize: vertical; }
+  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  button { padding:10px 16px; border-radius:8px; border:0; background:var(--brand); color:#fff; font:inherit; font-weight:600; cursor:pointer; }
+  button.secondary { background: transparent; color: var(--ink); border:1px solid var(--line); }
+  button[disabled] { opacity:.5; cursor: default; }
+  .rec { background:#d32f2f; }
+  img.preview { max-width:100%; border:1px solid var(--line); border-radius:8px; background:#fff; }
+  .muted { color: var(--mute); font-size: 14px; }
+  .warn { color:#b26a00; font-size:14px; }
+  .err { color:#d32f2f; }
+  a.dl { color: var(--brand); font-weight:600; margin-right: 12px; }
+  .small { flex:1; min-width: 140px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Designer AI</h1>
+  <p class="muted" style="margin:0">Type, speak (any language) or upload a reference image. You get a CMYK vector PDF/SVG in the exact size you ask for.</p>
+
+  <form id="f" class="card">
+    <label>What should I design? (or what should I change?)
+      <textarea id="text" dir="auto" placeholder="e.g. Visiting card 3.5 x 2 inch, navy blue and orange, name Ali Khan ..."></textarea>
+    </label>
+
+    <div class="row">
+      <button type="button" id="rec" class="secondary">🎙 Record voice</button>
+      <span id="recstate" class="muted"></span>
+    </div>
+    <audio id="player" controls hidden></audio>
+
+    <div class="row">
+      <label class="small">Voice file (optional)
+        <input type="file" id="audiofile" accept="audio/*">
+      </label>
+      <label class="small">Reference image(s) (optional)
+        <input type="file" id="images" accept="image/*" multiple>
+      </label>
+    </div>
+
+    <div class="row">
+      <label class="small">Size (optional)
+        <input type="text" id="size" placeholder='3.5x2in, 90x55mm, 10ft x 4ft, A4'>
+      </label>
+      <label class="small">Project name (keeps versions)
+        <input type="text" id="project" placeholder="ali-card">
+      </label>
+    </div>
+
+    <div class="row">
+      <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="new"> Start from scratch (ignore previous version)</label>
+    </div>
+
+    <label>Password (only if the server needs one)
+      <input type="password" id="token" autocomplete="off">
+    </label>
+
+    <div class="row"><button type="submit" id="go">Create design</button><span id="status" class="muted"></span></div>
+  </form>
+
+  <section id="out" class="card" hidden>
+    <div id="meta" class="muted"></div>
+    <img id="prev" class="preview" alt="Design preview" hidden>
+    <div id="links"></div>
+    <div id="notes"></div>
+    <div id="warns" class="warn"></div>
+  </section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+let recorder = null, chunks = [], recorded = null;
+const tokenKey = "designer_token";
+$("token").value = localStorage.getItem(tokenKey) || "";
+
+$("rec").onclick = async () => {
+  if (recorder && recorder.state === "recording") { recorder.stop(); return; }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    recorder = new MediaRecorder(stream);
+    chunks = [];
+    recorder.ondataavailable = e => chunks.push(e.data);
+    recorder.onstop = () => {
+      stream.getTracks().forEach(t => t.stop());
+      recorded = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+      $("player").src = URL.createObjectURL(recorded); $("player").hidden = false;
+      $("rec").textContent = "🎙 Record again"; $("rec").classList.remove("rec");
+      $("recstate").textContent = "Recording saved.";
+    };
+    recorder.start();
+    $("rec").textContent = "⏹ Stop"; $("rec").classList.add("rec");
+    $("recstate").textContent = "Recording ... speak your instructions.";
+  } catch (e) { $("recstate").textContent = "Microphone not available: " + e.message; }
+};
+
+function ext(mime) { return mime.includes("mp4") ? "m4a" : mime.includes("ogg") ? "ogg" : "webm"; }
+
+$("f").onsubmit = async ev => {
+  ev.preventDefault();
+  const fd = new FormData();
+  fd.append("text", $("text").value);
+  fd.append("size", $("size").value);
+  fd.append("project_name", $("project").value);
+  fd.append("new", $("new").checked ? "true" : "false");
+  if (recorded) fd.append("audio", recorded, "voice." + ext(recorded.type));
+  if ($("audiofile").files[0]) fd.append("audio", $("audiofile").files[0]);
+  for (const f of $("images").files) fd.append("images", f);
+  const token = $("token").value; localStorage.setItem(tokenKey, token);
+
+  $("go").disabled = true; $("status").textContent = "Designing ... this can take a minute."; $("out").hidden = true;
+  try {
+    const res = await fetch("/api/design", { method: "POST", body: fd, headers: token ? { Authorization: "Bearer " + token } : {} });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || res.statusText);
+    const q = token ? "?token=" + encodeURIComponent(token) : "";
+    $("project").value = data.project;
+    $("meta").textContent = `Project ${data.project} - version ${data.version} - ${data.size}` +
+      (data.transcripts.length ? ` - I heard: "${data.transcripts.join(" / ")}"` : "");
+    if (data.files.png) { $("prev").src = data.files.png + q; $("prev").hidden = false; } else { $("prev").hidden = true; }
+    $("links").innerHTML = Object.entries(data.files).filter(([k]) => k !== "png")
+      .map(([k, u]) => `<a class="dl" href="${u + q}" download>${k.toUpperCase()}</a>`).join("");
+    $("notes").textContent = data.notes || "";
+    $("warns").textContent = (data.warnings || []).join(" ");
+    $("out").hidden = false; $("status").textContent = "";
+    $("text").value = ""; $("text").placeholder = "Now tell me what to change ...";
+    recorded = null; $("player").hidden = true; $("recstate").textContent = "";
+  } catch (e) { $("status").textContent = "Error: " + e.message; }
+  finally { $("go").disabled = false; }
+};
+</script>
+</body>
+</html>

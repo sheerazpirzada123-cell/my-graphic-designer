@@ -1,0 +1,27 @@
+{
+  "title": "Business card - Ali Khan Traders",
+  "size": {"width": 3.5, "height": 2, "unit": "in"},
+  "bleed": {"value": 0.125, "unit": "in"},
+  "crop_marks": true,
+  "background": {"c": 0, "m": 0, "y": 0, "k": 0},
+  "elements": [
+    {"type": "rect", "x": 0, "y": 0, "width": 1.15, "height": 2,
+     "fill": {"type": "linear", "x1": 0, "y1": 0, "x2": 1.15, "y2": 2,
+              "stops": [{"offset": 0, "color": {"c": 100, "m": 85, "y": 20, "k": 25}},
+                        {"offset": 1, "color": {"c": 85, "m": 45, "y": 0, "k": 10}}]}},
+    {"type": "rect", "x": -0.2, "y": -0.2, "width": 0.2, "height": 2.4,
+     "fill": {"c": 100, "m": 85, "y": 20, "k": 25}},
+    {"type": "ellipse", "cx": 0.575, "cy": 0.8, "r": 0.33,
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 0}, "opacity": 0.95},
+    {"type": "path", "d": "M0.575 0.55 L0.72 0.95 L0.43 0.95 Z",
+     "fill": {"c": 100, "m": 85, "y": 20, "k": 25}},
+    {"type": "text", "text": "ALI KHAN", "x": 1.45, "y": 0.62, "size": 17, "font": "Poppins", "bold": true,
+     "fill": {"c": 100, "m": 85, "y": 20, "k": 25}, "letter_spacing": 0.6},
+    {"type": "text", "text": "TRADERS", "x": 1.45, "y": 0.84, "size": 9, "font": "Poppins",
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 70}, "letter_spacing": 3},
+    {"type": "line", "x1": 1.45, "y1": 1.0, "x2": 3.2, "y2": 1.0,
+     "stroke": {"c": 0, "m": 50, "y": 100, "k": 0}, "stroke_width": 1.2},
+    {"type": "text", "text": "+92 300 1234567\nali@alikhantraders.pk\nKarachi, Pakistan", "x": 1.45, "y": 1.3,
+     "size": 7.5, "font": "Poppins", "line_height": 1.5, "fill": {"c": 0, "m": 0, "y": 0, "k": 85}}
+  ]
+}

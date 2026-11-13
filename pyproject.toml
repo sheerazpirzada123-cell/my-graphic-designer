@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "designer-ai"
+version = "0.1.0"
+description = "Voice, text or image instructions in any language -> print-ready CMYK vector designs (PDF/SVG) in exact sizes."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "reportlab>=4.0",
+  "fonttools>=4.40",
+  "Pillow>=10.0",
+  "anthropic>=0.40",
+]
+
+[project.optional-dependencies]
+voice = ["faster-whisper>=1.0"]
+urdu = ["arabic-reshaper>=3.0", "python-bidi>=0.4"]
+web = ["fastapi>=0.110", "uvicorn>=0.29", "python-multipart>=0.0.9"]
+dev = ["pytest>=8"]
+all = ["faster-whisper>=1.0", "arabic-reshaper>=3.0", "python-bidi>=0.4", "fastapi>=0.110", "uvicorn>=0.29", "python-multipart>=0.0.9"]
+
+[project.scripts]
+designer = "designer.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["designer*"]
+
+[tool.setuptools.package-data]
+designer = ["static/*.html"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

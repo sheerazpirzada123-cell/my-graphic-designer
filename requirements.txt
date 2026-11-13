@@ -1,0 +1,16 @@
+reportlab>=4.0
+fonttools>=4.40
+Pillow>=10.0
+anthropic>=0.40
+
+# Voice input (local, free, any language)
+faster-whisper>=1.0
+
+# Correct Urdu / Arabic / Persian text shaping
+arabic-reshaper>=3.0
+python-bidi>=0.4
+
+# Web app (record voice in the browser, upload images)
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9

@@ -1,0 +1,18 @@
+{
+  "title": "Shop banner 10ft x 4ft",
+  "size": "10ft x 4ft",
+  "bleed": {"value": 1, "unit": "in"},
+  "background": {"c": 0, "m": 0, "y": 100, "k": 0},
+  "elements": [
+    {"type": "rect", "x": 0, "y": 0, "width": 10, "height": 1.2,
+     "fill": {"c": 0, "m": 100, "y": 100, "k": 10}},
+    {"type": "rect", "x": 0, "y": 2.8, "width": 10, "height": 1.2,
+     "fill": {"c": 0, "m": 100, "y": 100, "k": 10}},
+    {"type": "text", "text": "GRAND SALE", "x": 5, "y": 2.35, "size": 14, "size_unit": "in", "font": "Poppins", "bold": true,
+     "align": "center", "fill": {"c": 0, "m": 0, "y": 0, "k": 100}},
+    {"type": "text", "text": "Up to 50% off - this week only", "x": 5, "y": 3.55, "size": 4, "size_unit": "in", "font": "Poppins",
+     "align": "center", "fill": {"c": 0, "m": 0, "y": 0, "k": 0}},
+    {"type": "path", "d": "M0.8 0.6 a0.3 0.3 0 1 0 0.6 0 a0.3 0.3 0 1 0 -0.6 0 Z",
+     "fill": {"c": 0, "m": 0, "y": 0, "k": 0}, "rotate": 15}
+  ]
+}
